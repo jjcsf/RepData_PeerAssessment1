@@ -18,3 +18,6 @@ actagg1[actagg1$x==max(actagg1$x),1]
 
 act<-read.csv("activity\\activity.csv")
 sum(is.na(act))
+
+names(actagg1)<-c("interval","stepavg")
+act<-merge(act,actagg1,by=c("interval"))
