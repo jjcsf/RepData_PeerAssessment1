@@ -1,23 +1,43 @@
-setwd("C:\\Users\\jcale\\Documents\\GitHub\\RepData_PeerAssessment1")
+setwd("C:\\Users\\calej\\Documents\\GitHub\\RepData_PeerAssessment1")
 act<-read.csv("activity\\activity.csv")
+
+
+aggdate<-aggregate(act$steps,list(act$date),FUN=sum)
+
+names(aggdate)<-c("date","steps")
+hist(aggdate$steps,xlab="Steps",main="Steps per day")
+
+mean(aggdate$steps,na.rm=TRUE)
+median(aggdate$steps,na.rm=TRUE)
 act<-na.omit(act)
+agginterval<-aggregate(act$steps,list(act$interval),FUN=mean)
 
-actagg<-aggregate(act$steps,list(act$date),FUN=sum)
-
-names(actagg)<-c("date","steps")
-hist(actagg$steps,xlab="Steps",main="Steps per day")
-
-mean(actagg$steps)
-median(actagg$steps)
-
-actagg1<-aggregate(act$steps,list(act$interval),FUN=mean)
-plot(actagg1,type="l",xlab='Interval',ylab="steps")
+plot(agginterval,type="l",xlab='Interval',ylab="steps")
 
 #5 minute interval with most steps
-actagg1[actagg1$x==max(actagg1$x),1]
+agginterval[agginterval$x==max(agginterval$x),1]
 
 act<-read.csv("activity\\activity.csv")
-sum(is.na(act))
 
-names(actagg1)<-c("interval","stepavg")
-act<-merge(act,actagg1,by=c("interval"))
+sum(is.na(act))
+act<-na.omit(act)
+
+
+names(agginterval)<-c("interval","stepavg")
+act<-merge(act,agginterval,by=c("interval"))
+act$steps[is.na(act$steps)] <- act$stepavg[is.na(act$steps)]
+
+aggdate2<-aggregate(act$steps,list(act$date),FUN=sum)
+names(aggdate2)<-c("date","steps")
+hist(aggdate2$steps,xlab="Steps",main="Steps per day")
+
+mean(aggdate2$steps)
+median(aggdate2$steps)
+
+act$date <- as.Date(act$date)
+weekdays1 <- c('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday')
+act$weekday <- c('weekend', 'weekday')[(weekdays(act$date) %in% weekdays1)+1L]
+aggweekday<-aggregate(act$steps,list(act$interval,act$weekday),FUN=mean)
+names(aggweekday)<-c("interval","weekday","stepavg")
+with(aggweekday[aggweekday$weekday=="weekday",],plot(interval,stepavg,type="l"))
+with(aggweekday[aggweekday$weekday=="weekend",],lines(interval,stepavg,type="l",col = "red"))
