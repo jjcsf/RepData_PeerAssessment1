@@ -39,5 +39,6 @@ weekdays1 <- c('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday')
 act$weekday <- c('weekend', 'weekday')[(weekdays(act$date) %in% weekdays1)+1L]
 aggweekday<-aggregate(act$steps,list(act$interval,act$weekday),FUN=mean)
 names(aggweekday)<-c("interval","weekday","stepavg")
-with(aggweekday[aggweekday$weekday=="weekday",],plot(interval,stepavg,type="l"))
-with(aggweekday[aggweekday$weekday=="weekend",],lines(interval,stepavg,type="l",col = "red"))
+with(aggweekday[aggweekday$weekday=="weekday",],plot(interval,stepavg,type="l",col="blue",lwd=2))
+with(aggweekday[aggweekday$weekday=="weekend",],lines(interval,stepavg,type="l",col = "red",lwd=2))
+legend("topright", c("weekday","weekend"), lty=c(1,1), lwd=c(2.5,2.5),col=c("blue","red"))
