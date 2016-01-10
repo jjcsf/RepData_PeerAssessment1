@@ -118,9 +118,9 @@ aggweekday<-aggregate(act$steps,list(act$interval,act$weekday),FUN=mean)
 names(aggweekday)<-c("interval","weekday","stepavg")
 
 ##Make a panel plot containing a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis).
-par(mfrow=c(2,1))
-with(aggweekday[aggweekday$weekday=="weekday",],plot(interval,stepavg,type="l",col="blue",lwd=2,main="Weekday"))
-with(aggweekday[aggweekday$weekday=="weekend",],plot(interval,stepavg,type="l",col = "red",lwd=2,main="Weekend"))
+
+library("lattice")
+xyplot(stepavg ~ interval | weekday, data=aggweekday,type="l",layout=c(1,2))
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-4-1.png)\
